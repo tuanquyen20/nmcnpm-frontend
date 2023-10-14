@@ -12,7 +12,13 @@
         </v-col>
 
         <v-col md="2" offset-md="8" class="mt-3">
-          <div><span class="white--text">Sign in</span></div>
+          <v-btn
+                  @click="openLoginPage"
+                  text
+                  class="white--text mb-2"
+                  >Sign In</v-btn
+                >
+
         </v-col>
       </v-row>
     </v-app-bar>
@@ -105,29 +111,137 @@
             <v-carousel-item contain v-for="(item, i) in slideItems" :key="i">
               <v-row class="fill-height">
                 <v-col cols="4">
-                  <v-card
-                    color="#D9D9D9"
-                    style="height: 400px; overflow: scroll"
-                  >
+                  <v-card color="#D9D9D9">
                     <v-card-title>{{ item.name }}</v-card-title>
-                    <v-card-subtitle>{{ item.price }}</v-card-subtitle>
-                    <v-card-text style="text-align: justify" class="mt-1 black--text">{{
-                      item.description
-                    }}</v-card-text>
+                    <v-card-subtitle>{{ formattedPrice(item.price) + " VNĐ/hour" }}</v-card-subtitle>
+                    <v-card-text
+                      style="text-align: justify"
+                      class="mt-1 black--text"
+                      >{{ item.description }}</v-card-text
+                    >
                     <v-card-actions>
-                      <v-btn
-                        color="#252525"
-                        class="white--text"
-                        height="50px"
-                        width="100%"
-                      >
-                        Book now
-                      </v-btn>
+                      <v-dialog v-model="bookingDialog" width="900">
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            color="#252525"
+                            class="white--text"
+                            height="50px"
+                            width="100%"
+                            v-bind="attrs"
+                            v-on="on"
+                          >
+                            Book now
+                          </v-btn>
+                        </template>
+
+                        <v-card>
+                          <v-card-title class="text-h5 grey lighten-2">
+                            Book Meliã Karaoke Room
+                          </v-card-title>
+
+                          <v-card-actions>
+                            <v-row>
+                              <v-col cols="6">
+                                <v-text-field
+                                  v-model="bookingForm.name"
+                                  label="Name"
+                                  required
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="6">
+                                <v-select
+                                  v-model="bookingForm.room"
+                                  :hint="`${bookingForm.room.price}`"
+                                  :items="slideItems"
+                                  item-text="name"
+                                  label="Room"
+                                  return-object
+                                  single-line
+                                ></v-select>
+                              </v-col>
+                              <v-col cols="6">
+                                <v-text-field
+                                  v-model="bookingForm.phone"
+                                  label="Phone number"
+                                  required
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="6">
+                                <v-text-field
+                                  v-model="bookingForm.combo"
+                                  label="Combo"
+                                  required
+                                ></v-text-field>
+                              </v-col>
+
+                              <v-col cols="6">
+                                <v-dialog
+                                  v-model="timeStartDialog"
+                                  width="290px"
+                                >
+                                  <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field
+                                      v-model="bookingForm.start"
+                                      label="Time start"
+                                      append-icon="mdi-clock-time-four-outline"
+                                      readonly
+                                      v-bind="attrs"
+                                      v-on="on"
+                                      required
+                                    ></v-text-field>
+                                  </template>
+                                  <v-time-picker
+                                    v-if="timeStartDialog"
+                                    v-model="bookingForm.start"
+                                    full-width
+                                  >
+                                  </v-time-picker>
+                                </v-dialog>
+                              </v-col>
+
+                              <v-col cols="6">
+                                <v-dialog v-model="timeEndDialog" width="290px">
+                                  <template v-slot:activator="{ on, attrs }">
+                                    <v-text-field
+                                      v-model="bookingForm.end"
+                                      label="Time end"
+                                      append-icon="mdi-clock-time-four-outline"
+                                      readonly
+                                      v-bind="attrs"
+                                      v-on="on"
+                                      required
+                                    ></v-text-field>
+                                  </template>
+                                  <v-time-picker
+                                    v-if="timeEndDialog"
+                                    v-model="bookingForm.end"
+                                    full-width
+                                  >
+                                  </v-time-picker>
+                                </v-dialog>
+                              </v-col>
+                            </v-row>
+                          </v-card-actions>
+
+                          <v-divider></v-divider>
+
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn
+                              color="#252525"
+                              class="white--text"
+                              @click="bookingDialog = false"
+                            >
+                              Book now
+                            </v-btn>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
                     </v-card-actions>
                   </v-card>
                 </v-col>
                 <v-col cols="8">
-                  <v-img class="rounded-lg" :src="item.src"></v-img>
+                  <v-img class="rounded-lg" :src="item.background_link"></v-img>
                 </v-col>
               </v-row>
             </v-carousel-item>
@@ -143,34 +257,30 @@
 </template>
 
 <script>
+import numeral from 'numeral';
+
 export default {
   data: () => ({
-    slideItems: [
-      {
-        src: "https://royalmhotels.com/uploads/rooms_types/gallery/1170x780/Suite-Premium-2-min.jpg",
-        name: "Meliã Guest Room",
-        price: "500.000 VNĐ/h",
-        description:
-          "The Meliã Guest Room is a comfortable and inviting space designed for those looking to enjoy a delightful karaoke experience. This room is perfect for small gatherings of friends or family who want to sing their hearts out in a cozy setting. Featuring modern decor and cozy seating arrangements, the Meliã Guest Room ensures a relaxed and enjoyable atmosphere. Equipped with state-of-the-art karaoke equipment and a wide selection of songs, it's an ideal choice for those seeking a casual and fun karaoke session.",
-      },
-      {
-        src: "https://royalmhotels.com/uploads/rooms_types/gallery/1170x780/Room-min.jpg",
-        name: "Meliã Deluxo Room",
-        price: "2.000.000 VNĐ/h",
+    bookingDialog: false,
+  
+    slideItems: [],
 
-        description:
-          "The Meliã Deluxe Room offers a step up in luxury and entertainment for karaoke enthusiasts. This room is designed to provide an upscale karaoke experience with elegant furnishings, stylish décor, and spacious seating. You and your guests will be immersed in a lavish environment that exudes sophistication. The karaoke setup in the Meliã Deluxe Room is top-notch, featuring high-quality sound systems, large screen displays, and an extensive song library to cater to all musical preferences. Whether it's a celebration or a special occasion, this room adds a touch of class to your karaoke night.",
-      },
-      {
-        src: "https://royalmhotels.com/abudhabi/uploads/rooms_types/gallery/1170x780/Room-Premium-min.jpg",
-        name: "Meliã Premium Room",
-        price: "20.000.000 VNĐ/h",
+    timeStartDialog: false,
+    timeEndDialog: false,
 
-        description:
-          "The Meliã Premium Room represents the pinnacle of karaoke luxury. This room is a haven for those seeking an opulent and unforgettable karaoke experience. Step into a world of extravagance with lavish furnishings, exquisite decorations, and an ambiance that screams luxury. The Meliã Premium Room offers a private and exclusive setting for your karaoke adventures. Equipped with state-of-the-art audio-visual equipment, including premium sound systems and high-definition screens, you can enjoy an immersive and unforgettable karaoke performance. Whether it's a special celebration or a gathering of VIP guests, the Meliã Premium Room ensures a night of pure indulgence and entertainment.",
-      },
-    ],
+    bookingForm: {
+      room: {},
+      name: "",
+      phone: "",
+      combo: "",
+      start: "",
+      end: "",
+    },
   }),
+
+  computed: {
+   
+  },
 
   methods: {
     openFacebookFanpage() {
@@ -178,7 +288,27 @@ export default {
         "https://www.facebook.com/profile.php?id=100012623027984";
       window.open(urlToOpen, "_blank");
     },
+
+    openLoginPage() {
+      this.$router.push({ name: "log-in" });
+    },
+
+    formattedPrice(price) {
+      return numeral(price).format('0,0');
+    },
+
+    getRoomTypesList() {
+      this.$axios.get('/room_types/all')
+      .then(res => {
+        this.slideItems = res.data
+      })
+    }
   },
+
+  created() {
+    this.getRoomTypesList()
+
+  }
 };
 </script>
 
