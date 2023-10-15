@@ -58,7 +58,7 @@ export default {
       ) {
         this.loading = true;
         setTimeout(() => {
-          this.$router.push({ name: "admin-dashboard" });
+          this.$router.push({ name: "orders" });
         }, 3000);
       }
     },

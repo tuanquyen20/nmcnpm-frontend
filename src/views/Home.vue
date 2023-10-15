@@ -12,13 +12,9 @@
         </v-col>
 
         <v-col md="2" offset-md="8" class="mt-3">
-          <v-btn
-                  @click="openLoginPage"
-                  text
-                  class="white--text mb-2"
-                  >Sign In</v-btn
-                >
-
+          <v-btn @click="openLoginPage" text class="white--text mb-2"
+            >Sign In</v-btn
+          >
         </v-col>
       </v-row>
     </v-app-bar>
@@ -113,130 +109,24 @@
                 <v-col cols="4">
                   <v-card color="#D9D9D9">
                     <v-card-title>{{ item.name }}</v-card-title>
-                    <v-card-subtitle>{{ formattedPrice(item.price) + " VNĐ/hour" }}</v-card-subtitle>
+                    <v-card-subtitle>{{
+                      formattedPrice(item.price) + " VNĐ/hour"
+                    }}</v-card-subtitle>
                     <v-card-text
                       style="text-align: justify"
                       class="mt-1 black--text"
                       >{{ item.description }}</v-card-text
                     >
                     <v-card-actions>
-                      <v-dialog v-model="bookingDialog" width="900">
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-btn
-                            color="#252525"
-                            class="white--text"
-                            height="50px"
-                            width="100%"
-                            v-bind="attrs"
-                            v-on="on"
-                          >
-                            Book now
-                          </v-btn>
-                        </template>
-
-                        <v-card>
-                          <v-card-title class="text-h5 grey lighten-2">
-                            Book Meliã Karaoke Room
-                          </v-card-title>
-
-                          <v-card-actions>
-                            <v-row>
-                              <v-col cols="6">
-                                <v-text-field
-                                  v-model="bookingForm.name"
-                                  label="Name"
-                                  required
-                                ></v-text-field>
-                              </v-col>
-                              <v-col cols="6">
-                                <v-select
-                                  v-model="bookingForm.room"
-                                  :hint="`${bookingForm.room.price}`"
-                                  :items="slideItems"
-                                  item-text="name"
-                                  label="Room"
-                                  return-object
-                                  single-line
-                                ></v-select>
-                              </v-col>
-                              <v-col cols="6">
-                                <v-text-field
-                                  v-model="bookingForm.phone"
-                                  label="Phone number"
-                                  required
-                                ></v-text-field>
-                              </v-col>
-                              <v-col cols="6">
-                                <v-text-field
-                                  v-model="bookingForm.combo"
-                                  label="Combo"
-                                  required
-                                ></v-text-field>
-                              </v-col>
-
-                              <v-col cols="6">
-                                <v-dialog
-                                  v-model="timeStartDialog"
-                                  width="290px"
-                                >
-                                  <template v-slot:activator="{ on, attrs }">
-                                    <v-text-field
-                                      v-model="bookingForm.start"
-                                      label="Time start"
-                                      append-icon="mdi-clock-time-four-outline"
-                                      readonly
-                                      v-bind="attrs"
-                                      v-on="on"
-                                      required
-                                    ></v-text-field>
-                                  </template>
-                                  <v-time-picker
-                                    v-if="timeStartDialog"
-                                    v-model="bookingForm.start"
-                                    full-width
-                                  >
-                                  </v-time-picker>
-                                </v-dialog>
-                              </v-col>
-
-                              <v-col cols="6">
-                                <v-dialog v-model="timeEndDialog" width="290px">
-                                  <template v-slot:activator="{ on, attrs }">
-                                    <v-text-field
-                                      v-model="bookingForm.end"
-                                      label="Time end"
-                                      append-icon="mdi-clock-time-four-outline"
-                                      readonly
-                                      v-bind="attrs"
-                                      v-on="on"
-                                      required
-                                    ></v-text-field>
-                                  </template>
-                                  <v-time-picker
-                                    v-if="timeEndDialog"
-                                    v-model="bookingForm.end"
-                                    full-width
-                                  >
-                                  </v-time-picker>
-                                </v-dialog>
-                              </v-col>
-                            </v-row>
-                          </v-card-actions>
-
-                          <v-divider></v-divider>
-
-                          <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                              color="#252525"
-                              class="white--text"
-                              @click="bookingDialog = false"
-                            >
-                              Book now
-                            </v-btn>
-                          </v-card-actions>
-                        </v-card>
-                      </v-dialog>
+                      <v-btn
+                        color="#252525"
+                        class="white--text"
+                        height="50px"
+                        width="100%"
+                        @click="showBookingForm(item)"
+                      >
+                        Book now
+                      </v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-col>
@@ -253,34 +143,151 @@
         <v-img src="@/assets/picture.jpg" class="fill-height"></v-img>
       </v-container>
     </v-main>
+
+    <v-dialog v-model="bookingDialog" width="900">
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          color="#252525"
+          class="white--text"
+          height="50px"
+          width="100%"
+          v-bind="attrs"
+          v-on="on"
+        >
+          Book now
+        </v-btn>
+      </template>
+
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2">
+          Book Meliã Karaoke Room
+        </v-card-title>
+
+        <v-card-actions>
+          <v-row>
+            <v-col cols="6">
+              <v-text-field
+                v-model="bookingForm.name"
+                label="Name"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-select
+                v-model="bookingForm.select"
+                :hint="`${formattedPrice(bookingForm.select.price)} VNĐ/hour`"
+                :items="slideItems"
+                item-text="name"
+                item-value="id"
+                label="Room Type"
+                persistent-hint
+                return-object
+                single-line
+              ></v-select>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                v-model="bookingForm.phone_number"
+                label="Phone number"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                v-model="bookingForm.combo"
+                label="Combo"
+              ></v-text-field>
+            </v-col>
+
+            <v-col cols="6">
+              <v-dialog v-model="timeStartDialog" width="290px">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="bookingForm.time_start"
+                    label="Time start"
+                    append-icon="mdi-clock-time-four-outline"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-time-picker
+                  v-if="timeStartDialog"
+                  v-model="bookingForm.time_start"
+                  full-width
+                >
+                </v-time-picker>
+              </v-dialog>
+            </v-col>
+
+            <v-col cols="6">
+              <v-dialog v-model="timeEndDialog" width="290px">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="bookingForm.time_end"
+                    label="Time end"
+                    append-icon="mdi-clock-time-four-outline"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-time-picker
+                  v-if="timeEndDialog"
+                  v-model="bookingForm.time_end"
+                  full-width
+                >
+                </v-time-picker>
+              </v-dialog>
+            </v-col>
+          </v-row>
+        </v-card-actions>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="#252525" class="white--text" @click="orderRoom">
+            Book now
+          </v-btn>
+        </v-card-actions>
+
+        <v-card-text class="green--text" v-if="bookingSuccess"
+          >You have successfully placed your order! A Meliã representative will
+          contact you as soon as possible.</v-card-text
+        >
+        <v-card-text class="red--text" v-if="bookingFail"
+          >The room was fully booked during that time</v-card-text
+        >
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
 <script>
-import numeral from 'numeral';
+import numeral from "numeral";
 
 export default {
   data: () => ({
     bookingDialog: false,
-  
+
     slideItems: [],
 
     timeStartDialog: false,
     timeEndDialog: false,
 
     bookingForm: {
-      room: {},
+      select: {},
       name: "",
-      phone: "",
+      phone_number: "",
       combo: "",
-      start: "",
-      end: "",
+      time_start: "",
+      time_end: "",
     },
+
+    bookingSuccess: false,
+    bookingFail: false,
   }),
 
-  computed: {
-   
-  },
+  computed: {},
 
   methods: {
     openFacebookFanpage() {
@@ -294,21 +301,68 @@ export default {
     },
 
     formattedPrice(price) {
-      return numeral(price).format('0,0');
+      return numeral(price).format("0,0");
     },
 
     getRoomTypesList() {
-      this.$axios.get('/room_types/all')
-      .then(res => {
-        this.slideItems = res.data
-      })
-    }
+      this.$axios.get("/room_types/all").then((res) => {
+        this.slideItems = res.data;
+      });
+    },
+
+    showBookingForm(item) {
+      this.bookingForm.select = item;
+      this.bookingDialog = true;
+    },
+
+    orderRoom() {
+      this.$axios
+        .post(`/orders`, {
+          name: this.bookingForm.name,
+          phone_number: this.bookingForm.phone_number,
+          combo: this.bookingForm.combo,
+          time_start: this.bookingForm.time_start,
+          time_end: this.bookingForm.time_end,
+          room_type_id: this.bookingForm.select.id,
+        })
+
+        .then((res) => {
+          this.bookingSuccess = true;
+          setTimeout(() => {
+            this.bookingDialog = false;
+            this.bookingSuccess = false;
+            this.bookingForm = {
+              select: {},
+              name: "",
+              phone_number: "",
+              combo: "",
+              time_start: "",
+              time_end: "",
+            };
+          }, 3000);
+        })
+
+        .catch((err) => {
+          this.bookingFail = true;
+          setTimeout(() => {
+            this.bookingDialog = false;
+            this.bookingFail = false;
+            this.bookingForm = {
+              select: {},
+              name: "",
+              phone_number: "",
+              combo: "",
+              time_start: "",
+              time_end: "",
+            };
+          }, 3000);
+        });
+    },
   },
 
   created() {
-    this.getRoomTypesList()
-
-  }
+    this.getRoomTypesList();
+  },
 };
 </script>
 
