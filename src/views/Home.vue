@@ -140,24 +140,12 @@
       </v-container>
 
       <v-container fluid class="remove-padding">
+        <HomePosts></HomePosts>
         <v-img src="@/assets/picture.jpg" class="fill-height"></v-img>
       </v-container>
     </v-main>
 
     <v-dialog v-model="bookingDialog" width="900">
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          color="#252525"
-          class="white--text"
-          height="50px"
-          width="100%"
-          v-bind="attrs"
-          v-on="on"
-        >
-          Book now
-        </v-btn>
-      </template>
-
       <v-card>
         <v-card-title class="text-h5 grey lighten-2">
           Book Meliã Karaoke Room
@@ -197,6 +185,30 @@
               ></v-text-field>
             </v-col>
 
+            <v-col cols="12">
+              <v-dialog v-model="dateRangeDialog" width="290px">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="bookingForm.date_range"
+                    label="Time start"
+                    append-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-if="dateRangeDialog"
+                  v-model="bookingForm.date_range"
+                  range
+                  full-width
+                  color="#252525"
+                  :min="date"
+                >
+                </v-date-picker>
+              </v-dialog>
+            </v-col>
+
             <v-col cols="6">
               <v-dialog v-model="timeStartDialog" width="290px">
                 <template v-slot:activator="{ on, attrs }">
@@ -213,6 +225,13 @@
                   v-if="timeStartDialog"
                   v-model="bookingForm.time_start"
                   full-width
+                  color="#252525"
+                  :max="
+                    !bookingForm.date_range[1] ||
+                    bookingForm.date_range[0] === bookingForm.date_range[1]
+                      ? bookingForm.time_end
+                      : `23:59`
+                  "
                 >
                 </v-time-picker>
               </v-dialog>
@@ -234,6 +253,13 @@
                   v-if="timeEndDialog"
                   v-model="bookingForm.time_end"
                   full-width
+                  color="#252525"
+                  :min="
+                    !bookingForm.date_range[1] ||
+                    bookingForm.date_range[0] === bookingForm.date_range[1]
+                      ? bookingForm.time_start
+                      : `00:00`
+                  "
                 >
                 </v-time-picker>
               </v-dialog>
@@ -264,15 +290,20 @@
 
 <script>
 import numeral from "numeral";
+import HomePosts from "../components/HomePosts.vue";
+import { format } from "date-fns";
 
 export default {
+  components: { HomePosts },
   data: () => ({
     bookingDialog: false,
+    date: new Date(),
 
     slideItems: [],
 
     timeStartDialog: false,
     timeEndDialog: false,
+    dateRangeDialog: false,
 
     bookingForm: {
       select: {},
@@ -281,6 +312,7 @@ export default {
       combo: "",
       time_start: "",
       time_end: "",
+      date_range: [],
     },
 
     bookingSuccess: false,
@@ -321,8 +353,11 @@ export default {
           name: this.bookingForm.name,
           phone_number: this.bookingForm.phone_number,
           combo: this.bookingForm.combo,
-          time_start: this.bookingForm.time_start,
-          time_end: this.bookingForm.time_end,
+          time_start:
+            this.bookingForm.date_range[0] + " " + this.bookingForm.time_start,
+          time_end: !this.bookingForm.date_range[1]
+            ? this.bookingForm.date_range[0]
+            : this.bookingForm.date_range[1] + " " + this.bookingForm.time_end,
           room_type_id: this.bookingForm.select.id,
         })
 
@@ -338,6 +373,7 @@ export default {
               combo: "",
               time_start: "",
               time_end: "",
+              date_range: [],
             };
           }, 3000);
         })
@@ -354,6 +390,7 @@ export default {
               combo: "",
               time_start: "",
               time_end: "",
+              date_range: [],
             };
           }, 3000);
         });
@@ -362,6 +399,7 @@ export default {
 
   created() {
     this.getRoomTypesList();
+    this.date = format(this.date, "yyyy-MM-dd");
   },
 };
 </script>

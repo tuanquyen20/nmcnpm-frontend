@@ -49,7 +49,12 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '../components/Posts.vue')
       },
     ]
-  }
+  },
+  {
+    path: '/posts/:id',
+    name: 'post-page',
+    component: () => import(/* webpackChunkName: "about" */ '../views/PostPage.vue')
+  },
 ]
 
 const router = new VueRouter({

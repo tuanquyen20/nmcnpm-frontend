@@ -22,45 +22,25 @@
 
           <v-card-actions>
             <v-row>
-                <v-col cols="12">
-                    <v-text-field v-model="createForm.title"
-                    label="Title"
-                    ></v-text-field>
-                </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="createForm.title"
+                  label="Title"
+                ></v-text-field>
+              </v-col>
 
-                <v-col cols="12">
-                    <v-row>
-                  <v-col cols="8">
-                    <v-textarea
-                      name="input-7-1"
-                      label="Paragraph"
-                      v-model="createForm.contentInput.paragraph"
-                      filled
-                    ></v-textarea>
-                  </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="createForm.avatar"
+                  label="Avatar Link"
+                ></v-text-field>
+              </v-col>
 
-                  <v-col cols="3">
-                    <v-textarea
-                      name="input-7-1"
-                      rows="2"
-                      label="Image link"
-                      v-model="createForm.contentInput.image"
-                      filled
-                    ></v-textarea>
-                  </v-col>
-
-                  <v-col cols="1">
-                    <v-btn class="mx-2" small fab  dark color="indigo" @click="addContent(createForm.contentInput.paragraph, createForm.contentInput.image)">
-                      <v-icon dark> mdi-plus </v-icon>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-
-                </v-col>
+             
 
               <v-col
                 cols="12"
-                v-for="(item,index) in createForm.content"
+                v-for="(item, index) in createForm.content"
                 :key="index"
               >
                 <v-row>
@@ -84,8 +64,52 @@
                   </v-col>
 
                   <v-col cols="1">
-                    <v-btn class="mx-2" small fab  dark color="red">
-                      <v-icon dark @click="deleteContent(item)"> mdi-minus </v-icon>
+                    <v-btn class="mx-2" small fab dark color="red">
+                      <v-icon dark @click="deleteContent(item, 'create')">
+                        mdi-minus
+                      </v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+
+              <v-col cols="12">
+                <v-row>
+                  <v-col cols="8">
+                    <v-textarea
+                      name="input-7-1"
+                      label="Paragraph"
+                      v-model="createForm.contentInput.paragraph"
+                      filled
+                    ></v-textarea>
+                  </v-col>
+
+                  <v-col cols="3">
+                    <v-textarea
+                      name="input-7-1"
+                      rows="2"
+                      label="Image link"
+                      v-model="createForm.contentInput.image"
+                      filled
+                    ></v-textarea>
+                  </v-col>
+
+                  <v-col cols="1">
+                    <v-btn
+                      class="mx-2"
+                      small
+                      fab
+                      dark
+                      color="indigo"
+                      @click="
+                        addContentToEnd(
+                          createForm.contentInput.paragraph,
+                          createForm.contentInput.image,
+                          'create'
+                        )
+                      "
+                    >
+                      <v-icon dark> mdi-plus </v-icon>
                     </v-btn>
                   </v-col>
                 </v-row>
@@ -113,6 +137,10 @@
         class="elevation-1"
         :loading="loading"
       >
+        <template v-slot:[`item.title`]="{ item }">
+          <strong>{{ item.title }}</strong>
+        </template>
+
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="showUpdateForm(item)">
             mdi-pencil
@@ -131,26 +159,103 @@
       ></v-pagination>
     </div>
 
-    <v-dialog v-model="editDialog" width="900">
+    <v-dialog v-model="editDialog" width="1000">
       <v-card>
         <v-card-title class="text-h5 grey lighten-2">
-          Update Staff
+          Update Post
         </v-card-title>
 
         <v-card-actions>
           <v-row>
-            <v-col cols="6">
+            <v-col cols="12">
               <v-text-field
-                v-model="updateForm.name"
-                label="Name"
+                v-model="updateForm.title"
+                label="Title"
               ></v-text-field>
             </v-col>
 
-            <v-col cols="6">
+            <v-col cols="12">
               <v-text-field
-                v-model="updateForm.phone_number"
-                label="Phone number"
+                v-model="updateForm.avatar"
+                label="Avatar Link"
               ></v-text-field>
+            </v-col>
+
+            <v-col
+              cols="12"
+              v-for="(item, index) in updateForm.content"
+              :key="index"
+            >
+              <v-row>
+                <v-col cols="8">
+                  <v-textarea
+                    name="input-7-1"
+                    label="Paragraph"
+                    v-model="item.paragraph"
+                    filled
+                  ></v-textarea>
+                </v-col>
+
+                <v-col cols="3">
+                  <v-textarea
+                    name="input-7-1"
+                    rows="2"
+                    label="Image link"
+                    v-model="item.image"
+                    filled
+                  ></v-textarea>
+                </v-col>
+
+                <v-col cols="1">
+                  <v-btn class="mx-2" small fab dark color="red">
+                    <v-icon dark @click="deleteContent(item, 'update')">
+                      mdi-minus
+                    </v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-col>
+
+            <v-col cols="12" v-if="updateForm.content.length > 0">
+              <v-row>
+                <v-col cols="8">
+                  <v-textarea
+                    name="input-7-1"
+                    label="Paragraph"
+                    v-model="updateForm.contentInput.paragraph"
+                    filled
+                  ></v-textarea>
+                </v-col>
+
+                <v-col cols="3">
+                  <v-textarea
+                    name="input-7-1"
+                    rows="2"
+                    label="Image link"
+                    v-model="updateForm.contentInput.image"
+                    filled
+                  ></v-textarea>
+                </v-col>
+
+                <v-col cols="1">
+                  <v-btn
+                    class="mx-2"
+                    small
+                    fab
+                    dark
+                    color="indigo"
+                    @click="
+                      addContentToEnd(
+                        updateForm.contentInput.paragraph,
+                        updateForm.contentInput.image,
+                        'update'
+                      )
+                    "
+                  >
+                    <v-icon dark> mdi-plus </v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
             </v-col>
           </v-row>
         </v-card-actions>
@@ -169,8 +274,6 @@
 </template>
 
 <script>
-import numeral from "numeral";
-
 export default {
   data() {
     return {
@@ -178,30 +281,37 @@ export default {
       createDialog: false,
       loading: false,
       page: 1,
-      pageCount: 0,
+      pageCount: null,
       itemsPerPage: 10,
       items: [],
       headers: [
         { text: "ID", value: "id" },
-        { text: "Name", value: "name" },
-        { text: "Phone number", value: "phone_number" },
+        { text: "Title", value: "title" },
+        { text: "Created At", value: "created_at" },
         { text: "Actions", value: "actions", sortable: false },
       ],
 
       updateForm: {
         id: null,
-        name: "",
-        phone_number: 0,
+        created_at: "",
+        title: "",
+        avatar: "",
+        content: [],
+
+        contentInput: {
+          paragraph: "",
+          image: "",
+        },
       },
 
       createForm: {
         title: "",
-        content: [
-        ],
+        avatar: "",
+        content: [],
 
         contentInput: {
-            paragraph: "",
-            image: "",
+          paragraph: "",
+          image: "",
         },
       },
     };
@@ -213,7 +323,7 @@ export default {
       setTimeout(() => {
         this.loading = false;
         this.$axios
-          .get(`/staffs?page=${this.page}&limit=${this.itemsPerPage}`)
+          .get(`/posts?page=${this.page}&limit=${this.itemsPerPage}`)
           .then((res) => {
             this.items = res.data.items;
             this.pageCount = res.data.page_count;
@@ -222,7 +332,7 @@ export default {
     },
 
     deleteItem(item) {
-      this.$axios.delete(`/staffs/${item.id}`).then((res) => {
+      this.$axios.delete(`/posts/${item.id}`).then((res) => {
         this.loadItems();
       });
     },
@@ -231,16 +341,24 @@ export default {
       this.editDialog = true;
       this.updateForm = {
         id: item.id,
-        name: item.name,
-        phone_number: item.phone_number,
+        created_at: item.created_at,
+        title: item.title,
+        avatar: item.avatar,
+        content: item.content,
+        contentInput: {
+          paragraph: "",
+          image: "",
+        },
       };
     },
 
     updateItem() {
       this.$axios
-        .put(`/staffs/${this.updateForm.id}`, {
-          name: this.updateForm.name,
-          phone_number: this.updateForm.phone_number,
+        .put(`/posts/${this.updateForm.id}`, {
+          title: this.updateForm.title,
+          avatar: this.updateForm.avatar,
+          content: this.updateForm.content,
+          created_at: this.updateForm.created_at,
         })
 
         .then((res) => {
@@ -251,35 +369,90 @@ export default {
 
     createItem() {
       this.$axios
-        .post(`/staffs`, {
-          name: this.createForm.name,
-          phone_number: this.createForm.phone_number,
+        .post(`/posts`, {
+          title: this.createForm.title,
+          avatar: this.createForm.avatar,
+          content: this.createForm.content,
         })
 
         .then((res) => {
           this.createDialog = false;
+          this.createForm = {
+            title: "",
+            avatar: "",
+            content: [],
+
+            contentInput: {
+              paragraph: "",
+              image: "",
+            },
+          };
+
           this.loadItems();
         });
     },
 
-    addContent(paragraph, image) {
-        this.createForm.content.push(
-            {
-                paragraph: paragraph,
-                image: image
-            }
-        )
+    addContentToEnd(paragraph, image, formType) {
+      if (formType === "create") {
+        this.createForm.content.push({
+          paragraph: paragraph,
+          image: image,
+        });
 
         this.createForm.contentInput = {
-            paragraph: "",
-            image: "",
-        }
+          paragraph: "",
+          image: "",
+        };
+      }
+      if (formType === "update") {
+        this.updateForm.content.push({
+          paragraph: paragraph,
+          image: image,
+        });
 
+        this.updateForm.contentInput = {
+          paragraph: "",
+          image: "",
+        };
+      }
     },
 
-    deleteContent(item) {
-        this.createForm.content = this.createForm.content.filter(e => e != item)
-    }
+    addContentToStart(paragraph, image, formType) {
+      if (formType === "create") {
+        this.createForm.content.unshift({
+          paragraph: paragraph,
+          image: image,
+        });
+
+        this.createForm.contentInput = {
+          paragraph: "",
+          image: "",
+        };
+      }
+      if (formType === "update") {
+        this.updateForm.content.unshift({
+          paragraph: paragraph,
+          image: image,
+        });
+
+        this.updateForm.contentInput = {
+          paragraph: "",
+          image: "",
+        };
+      }
+    },
+
+    deleteContent(item, formType) {
+      if (formType === "create") {
+        this.createForm.content = this.createForm.content.filter(
+          (e) => e != item
+        );
+      } else {
+        this.updateForm.content = this.updateForm.content.filter(
+          (e) => e != item
+        );
+      }
+    },
   },
 
   created() {
