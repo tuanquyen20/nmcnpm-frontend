@@ -13,11 +13,17 @@ const routes = [
   {
     path: '/home',
     name: 'home',
+    meta: {
+      public: true
+    },
     component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
   },
   {
     path: '/log-in',
     name: 'log-in',
+    meta: {
+      public: true
+    },
     component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
   },
   {
@@ -98,6 +104,10 @@ const routes = [
   {
     path: '/posts/:id',
     name: 'post-page',
+    meta: {
+      public: true,
+
+    },
     component: () => import(/* webpackChunkName: "about" */ '../views/PostPage.vue')
   },
 
@@ -119,34 +129,51 @@ const routes = [
       },
     ]
   },
+  {
+    path: '/error-page',
+    name: 'error-page',
+    meta: {
+      public: true,
+
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/ErrorPage.vue')
+  }
 ]
 
 const router = new VueRouter({
   routes
 })
 
+
 router.beforeEach((to, from, next) => {
+  const { isLogged, isAdmin } = store.state;
+
   if (to.meta.requiresAdmin) {
-    if (!store.state.isLogged) {
+    if (!isLogged) {
       next('/log-in');
-    } else {
-      if(store.state.isAdmin) {
-        next();
-      }
-    }
-  } else {
-    if (to.meta.requiresCustomer) {
-      if (!store.state.isLogged) {
-        next('/log-in');
-      } else {
-        if(!store.state.isAdmin) {
-          next();
-        } 
-      }
-    } else {
+    } else if (isAdmin) {
       next();
+    } else {
+      next('/error-page');
     }
+  } else if (to.meta.requiresCustomer) {
+    if (!isLogged) {
+      next('/log-in');
+    } else if (!isAdmin) {
+      next();
+    } else {
+      next('/error-page');
+    }
+  } else 
+  // {
+  //   next();
+  // }
+  if (to.meta.public) {
+    next();
+  } else {
+    next('/error-page');
   }
 });
+
 
 export default router

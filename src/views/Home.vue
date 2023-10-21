@@ -25,7 +25,7 @@
           <v-btn @click="logOut" text class="white--text mb-2">Sign Out</v-btn>
         </v-col>
 
-        <v-col md="2" offset-md="8" class="mt-3" v-if="isLogged">
+        <v-col md="2" offset-md="8" class="mt-3" v-if="isLogged && isAdmin">
           <v-btn @click="logOut" text class="white--text mb-2">Sign Out</v-btn>
         </v-col>
       </v-row>
