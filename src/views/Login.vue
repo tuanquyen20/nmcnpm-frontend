@@ -24,7 +24,7 @@
               ></v-col>
               <v-col cols="3">
                 <v-btn
-                  @click="login"
+                  @click="login(email, password)"
                   depressed
                   color="#252525"
                   class="white--text ml-3"
@@ -50,17 +50,33 @@ export default {
       dialog: true,
     };
   },
+
   methods: {
-    login() {
-      if (
-        this.email === "admin@gmail.com" &&
-        this.password === "tuanquyenvidai"
-      ) {
-        this.loading = true;
-        setTimeout(() => {
-          this.$router.push({ name: "orders" });
-        }, 3000);
-      }
+    login(email, password) {
+      this.$axios.get(`/users/email=${email}`).then((res) => {
+        var user = res.data;
+        if (password === user.password) {
+          if (user.type === "admin") {
+            this.loading = true;
+            this.$store.dispatch("postUserInfor", user)
+            this.$store.dispatch("postIsAdmin", true)
+            this.$store.dispatch("postIsLogged", true)
+            setTimeout(() => {
+              this.$router.push({ name: "orders" });
+            }, 3000);
+          } else {
+            this.loading = true;
+            this.$store.dispatch("postUserInfor", user)
+            this.$store.dispatch("postIsLogged", true)
+            setTimeout(() => {
+              this.$router.push({ name: "home" });
+            }, 3000);
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
     },
   },
 };

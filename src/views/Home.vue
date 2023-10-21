@@ -11,10 +11,22 @@
           />
         </v-col>
 
-        <v-col md="2" offset-md="8" class="mt-3">
+        <v-col md="2" offset-md="8" class="mt-3" v-if="!isLogged">
           <v-btn @click="openLoginPage" text class="white--text mb-2"
             >Sign In</v-btn
           >
+        </v-col>
+
+        <v-col class="mt-3" v-if="isLogged && !isAdmin">
+          <v-btn @click="goToMyPosts" text class="white--text mb-2">My Posts</v-btn>
+        </v-col>
+
+        <v-col md="2" offset-md="5" class="mt-3" v-if="isLogged && !isAdmin">
+          <v-btn @click="logOut" text class="white--text mb-2">Sign Out</v-btn>
+        </v-col>
+
+        <v-col md="2" offset-md="8" class="mt-3" v-if="isLogged">
+          <v-btn @click="logOut" text class="white--text mb-2">Sign Out</v-btn>
         </v-col>
       </v-row>
     </v-app-bar>
@@ -140,7 +152,11 @@
       </v-container>
 
       <v-container fluid class="remove-padding">
-        <HomePosts></HomePosts>
+        <HomePosts
+          :isAdmin="isAdmin"
+          :isLogged="isLogged"
+          :userInfor="userInfor"
+        ></HomePosts>
         <v-img src="@/assets/picture.jpg" class="fill-height"></v-img>
       </v-container>
     </v-main>
@@ -296,6 +312,10 @@ import { format } from "date-fns";
 export default {
   components: { HomePosts },
   data: () => ({
+    userInfor: {},
+    isAdmin: false,
+    isLogged: false,
+
     bookingDialog: false,
     date: new Date(),
 
@@ -322,6 +342,16 @@ export default {
   computed: {},
 
   methods: {
+    goToMyPosts() {
+      this.$router.push({ name: "my-posts-customer" });
+    },
+
+    logOut() {
+      localStorage.clear();
+      window.location.reload();
+
+    },
+
     openFacebookFanpage() {
       const urlToOpen =
         "https://www.facebook.com/profile.php?id=100012623027984";
@@ -400,6 +430,19 @@ export default {
   created() {
     this.getRoomTypesList();
     this.date = format(this.date, "yyyy-MM-dd");
+    this.userInfor = this.$store.state.userInfor;
+    this.isAdmin = this.$store.state.isAdmin;
+    this.isLogged = this.$store.state.isLogged;
+
+    this.bookingForm = {
+      select: {},
+      name: this.userInfor.name || "",
+      phone_number: this.userInfor.phone_number || "",
+      combo: "",
+      time_start: "",
+      time_end: "",
+      date_range: [],
+    };
   },
 };
 </script>

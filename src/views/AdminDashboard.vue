@@ -50,22 +50,36 @@
 <script>
 export default {
   data: () => ({
+    userInfor: {},
+    isAdmin: false,
+    isLogged: false,
     drawer: null,
     items: [
-      ["mdi-cart-minus", "Orders", "orders"],
-      ["mdi-home-sound-in-outline", "Rooms", "rooms"],
-      ["mdi-format-list-bulleted-type", "Room Types", "room-types"],
-      ["mdi-account-multiple-outline", "Staffs", "staffs"],
-      ["mdi-post", "Posts", "posts"]
+      ["mdi-cart-minus", "Orders", "orders", "true"],
+      ["mdi-home-sound-in-outline", "Rooms", "rooms", , "true"],
+      ["mdi-format-list-bulleted-type", "Room Types", "room-types", "true"],
+      ["mdi-account-multiple-outline", "Staffs", "staffs", "true"],
+      ["mdi-post", "Posts", "posts", "true"],
+      ["mdi-account", "Users", "users", "true"],
+      ["mdi-post", "My Posts", "my-posts", "false"],
 
     ],
   }),
 
   methods: {
-    logout() {
-      this.$router.push({ name: "home" });
+    async logout() {
+      localStorage.clear();
+     await this.$router.push({ name: "home" });
+      window.location.reload();
+
     },
   },
+
+  created(){
+     this.userInfor = this.$store.state.userInfor;
+    this.isAdmin = this.$store.state.isAdmin;
+    this.isLogged = this.$store.state.isLogged;
+  }
 };
 </script>
 

@@ -277,6 +277,9 @@
 export default {
   data() {
     return {
+      userInfor: {},
+      isLogged: false,
+      isAdmin: false,
       editDialog: false,
       createDialog: false,
       loading: false,
@@ -345,6 +348,7 @@ export default {
         title: item.title,
         avatar: item.avatar,
         content: item.content,
+        user_id: item.user_id,
         contentInput: {
           paragraph: "",
           image: "",
@@ -359,6 +363,7 @@ export default {
           avatar: this.updateForm.avatar,
           content: this.updateForm.content,
           created_at: this.updateForm.created_at,
+          user_id: this.updateForm.user_id
         })
 
         .then((res) => {
@@ -373,6 +378,7 @@ export default {
           title: this.createForm.title,
           avatar: this.createForm.avatar,
           content: this.createForm.content,
+          user_id: this.userInfor.id
         })
 
         .then((res) => {
@@ -456,7 +462,11 @@ export default {
   },
 
   created() {
+    this.userInfor = this.$store.state.userInfor;
+    this.isAdmin = this.$store.state.isAdmin;
+    this.isLogged = this.$store.state.isLogged;
     this.loadItems();
+
   },
 };
 </script>

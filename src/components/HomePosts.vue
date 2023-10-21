@@ -1,8 +1,138 @@
 <template>
   <v-container fluid>
-    <div class="mt-6 mb-6" style="font-size: 25px; margin-left: 125px">
+    <div class="mt-6 mb-6 d-flex justify-space-between" style="font-size: 25px; margin-left: 125px">
       See our post
+
+      <v-dialog v-model="createDialog" width="1000">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            dark
+            v-bind="attrs"
+            v-on="on"
+            small
+            color="#252525"
+            style="right: 125px;"
+            v-if="isLogged && !isAdmin"
+          >
+            <v-icon dark> mdi-plus </v-icon>
+            Create
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title class="text-h5 grey lighten-2">
+            Create Posts
+          </v-card-title>
+
+          <v-card-actions>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="createForm.title"
+                  label="Title"
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12">
+                <v-text-field
+                  v-model="createForm.avatar"
+                  label="Avatar Link"
+                ></v-text-field>
+              </v-col>
+
+             
+
+              <v-col
+                cols="12"
+                v-for="(item, index) in createForm.content"
+                :key="index"
+              >
+                <v-row>
+                  <v-col cols="8">
+                    <v-textarea
+                      name="input-7-1"
+                      label="Paragraph"
+                      v-model="item.paragraph"
+                      filled
+                    ></v-textarea>
+                  </v-col>
+
+                  <v-col cols="3">
+                    <v-textarea
+                      name="input-7-1"
+                      rows="2"
+                      label="Image link"
+                      v-model="item.image"
+                      filled
+                    ></v-textarea>
+                  </v-col>
+
+                  <v-col cols="1">
+                    <v-btn class="mx-2" small fab dark color="red">
+                      <v-icon dark @click="deleteContent(item, 'create')">
+                        mdi-minus
+                      </v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+
+              <v-col cols="12">
+                <v-row>
+                  <v-col cols="8">
+                    <v-textarea
+                      name="input-7-1"
+                      label="Paragraph"
+                      v-model="createForm.contentInput.paragraph"
+                      filled
+                    ></v-textarea>
+                  </v-col>
+
+                  <v-col cols="3">
+                    <v-textarea
+                      name="input-7-1"
+                      rows="2"
+                      label="Image link"
+                      v-model="createForm.contentInput.image"
+                      filled
+                    ></v-textarea>
+                  </v-col>
+
+                  <v-col cols="1">
+                    <v-btn
+                      class="mx-2"
+                      small
+                      fab
+                      dark
+                      color="indigo"
+                      @click="
+                        addContentToEnd(
+                          createForm.contentInput.paragraph,
+                          createForm.contentInput.image,
+                          'create'
+                        )
+                      "
+                    >
+                      <v-icon dark> mdi-plus </v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-card-actions>
+
+          <v-divider></v-divider>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="#252525" class="white--text" @click="createItem">
+              Create
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
+
+
 
     <div style="margin-left: 125px; margin-right: 125px" class="mb-6">
       <v-row>
@@ -45,11 +175,29 @@
 
 <script>
 export default {
+   props: {
+    userInfor: Object,
+    isLogged: Boolean,
+    isAdmin: Boolean,
+  },
+
   data() {
     return {
       itemsPerPage: 4,
       items: [],
       loading: false,
+      createForm: {
+        title: "",
+        avatar: "",
+        content: [],
+
+        contentInput: {
+          paragraph: "",
+          image: "",
+        },
+      },
+
+      createDialog: false,
     };
   },
 
@@ -74,6 +222,54 @@ export default {
     morePost() {
       this.itemsPerPage += 4;
       this.loadItems();
+    },
+
+    addContentToEnd(paragraph, image, formType) {
+      if (formType === "create") {
+        this.createForm.content.push({
+          paragraph: paragraph,
+          image: image,
+        });
+
+        this.createForm.contentInput = {
+          paragraph: "",
+          image: "",
+        };
+      }
+    },
+
+    deleteContent(item, formType) {
+      if (formType === "create") {
+        this.createForm.content = this.createForm.content.filter(
+          (e) => e != item
+        );
+      }
+    },
+
+    createItem() {
+      this.$axios
+        .post(`/posts`, {
+          title: this.createForm.title,
+          avatar: this.createForm.avatar,
+          content: this.createForm.content,
+          user_id: this.userInfor.id
+        })
+
+        .then((res) => {
+          this.createDialog = false;
+          this.createForm = {
+            title: "",
+            avatar: "",
+            content: [],
+
+            contentInput: {
+              paragraph: "",
+              image: "",
+            },
+          };
+
+          this.loadItems();
+        });
     },
   },
 
