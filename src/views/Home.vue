@@ -122,7 +122,6 @@
                 <v-col cols="4">
                   <v-card
                     color="#D9D9D9"
-                    v-scroll.self="onScroll"
                     class="overflow-y-auto"
                     max-height="500"
                   >
@@ -200,7 +199,13 @@
                 label="Phone number"
               ></v-text-field>
             </v-col>
-            <v-col cols="6">
+             <v-col cols="6">
+              <v-text-field
+                v-model="bookingForm.email"
+                label="Email"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12">
               <v-text-field
                 v-model="bookingForm.combo"
                 label="Combo"
@@ -335,6 +340,7 @@ export default {
       select: {},
       name: "",
       phone_number: "",
+      email: "",
       combo: "",
       time_start: "",
       time_end: "",
@@ -392,6 +398,7 @@ export default {
         .post(`/orders`, {
           name: this.bookingForm.name,
           phone_number: this.bookingForm.phone_number,
+          email: this.bookingForm.email,
           combo: this.bookingForm.combo,
           time_start:
             this.bookingForm.date_range[0] + " " + this.bookingForm.time_start,
@@ -448,6 +455,7 @@ export default {
       select: {},
       name: this.userInfor.name || "",
       phone_number: this.userInfor.phone_number || "",
+      email: this.userInfor.email || "",
       combo: "",
       time_start: "",
       time_end: "",

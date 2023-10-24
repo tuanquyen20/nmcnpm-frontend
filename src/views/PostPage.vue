@@ -5,7 +5,7 @@
         <v-icon @click="backToHome" class="post-back-to-home" color="blue"
           >mdi-keyboard-backspace</v-icon
         >
-        <span class="ml-2 blue--text">Back to home</span>
+        <span @click="backToHome" class="ml-2 blue--text post-back-to-home">Back to home</span>
       </div>
 
       <div class="author mt-6 mb-6 d-flex justify-center align-center">

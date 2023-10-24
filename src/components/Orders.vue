@@ -87,6 +87,7 @@ export default {
         { text: "ID", value: "id" },
         { text: "Name", value: "name" },
         { text: "Phone Number", value: "phone_number" },
+        { text: "Email", value: "email" },
         { text: "Time", value: "time" },
         { text: "Room ID", value: "room_id" },
         { text: "Combo", value: "combo" },
@@ -150,6 +151,7 @@ export default {
         .put(`/orders/${item.id}`, {
           name: item.name,
           phone_number: item.phone_number,
+          email: item.email,
           time_start: item.time_start,
           time_end: item.time_end,
           room_id: item.room_id,
