@@ -23,20 +23,18 @@
           <v-card-actions>
             <v-row>
               <v-col cols="12">
-              <v-select
-                v-model="createForm.select"
-                :hint="`ID: ${createForm.select.id}`"
-                :items="roomTypesList"
-                item-text="name"
-                item-value="id"
-                label="Room Type"
-                persistent-hint
-                return-object
-                single-line
-              ></v-select>
+                <v-select
+                  v-model="createForm.select"
+                  :hint="`ID: ${createForm.select.id}`"
+                  :items="roomTypesList"
+                  item-text="name"
+                  item-value="id"
+                  label="Room Type"
+                  persistent-hint
+                  return-object
+                  single-line
+                ></v-select>
               </v-col>
-
-              
             </v-row>
           </v-card-actions>
 
@@ -169,6 +167,9 @@ export default {
           .then((res) => {
             this.items = res.data.items;
             this.pageCount = res.data.page_count;
+          })
+          .catch((err) => {
+            console.error(err);
           });
       }, 1000);
     },
@@ -178,9 +179,14 @@ export default {
     },
 
     deleteItem(item) {
-      this.$axios.delete(`/rooms/${item.id}`).then((res) => {
-        this.loadItems();
-      });
+      this.$axios
+        .delete(`/rooms/${item.id}`)
+        .then((res) => {
+          this.loadItems();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
 
     showUpdateForm(item) {
@@ -203,6 +209,9 @@ export default {
         .then((res) => {
           this.editDialog = false;
           this.loadItems();
+        })
+        .catch((err) => {
+          console.error(err);
         });
     },
 
@@ -215,13 +224,21 @@ export default {
         .then((res) => {
           this.createDialog = false;
           this.loadItems();
+        })
+        .catch((err) => {
+          console.error(err);
         });
     },
 
     async getRoomTypesList() {
-      await this.$axios.get("/room_types/all").then((res) => {
-        this.roomTypesList = res.data;
-      });
+      await this.$axios
+        .get("/room_types/all")
+        .then((res) => {
+          this.roomTypesList = res.data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
 
     renderRoomType(id) {

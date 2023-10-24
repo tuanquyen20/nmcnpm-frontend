@@ -53,17 +53,27 @@ export default {
 
   methods: {
     async getPost(id) {
-      await this.$axios.get(`/posts/${id}`).then((res) => {
-        this.item = res.data;
-      });
+      await this.$axios
+        .get(`/posts/${id}`)
+        .then((res) => {
+          this.item = res.data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
 
       this.getAuthor();
     },
 
     getAuthor() {
-      this.$axios.get(`/users/${this.item.user_id}`).then((res) => {
-        this.authorInfor = res.data;
-      });
+      this.$axios
+        .get(`/users/${this.item.user_id}`)
+        .then((res) => {
+          this.authorInfor = res.data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
 
     backToHome() {

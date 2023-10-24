@@ -35,7 +35,6 @@
                   label="Phone number"
                 ></v-text-field>
               </v-col>
-
             </v-row>
           </v-card-actions>
 
@@ -59,7 +58,6 @@
         class="elevation-1"
         :loading="loading"
       >
-        
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="showUpdateForm(item)">
             mdi-pencil
@@ -138,13 +136,12 @@ export default {
       updateForm: {
         id: null,
         name: "",
-        phone_number: 0
-       
+        phone_number: 0,
       },
 
       createForm: {
         name: "",
-        phone_number: ""
+        phone_number: "",
       },
     };
   },
@@ -159,15 +156,22 @@ export default {
           .then((res) => {
             this.items = res.data.items;
             this.pageCount = res.data.page_count;
+          })
+          .catch((err) => {
+            console.error(err);
           });
       }, 1000);
     },
 
-   
     deleteItem(item) {
-      this.$axios.delete(`/staffs/${item.id}`).then((res) => {
-        this.loadItems();
-      });
+      this.$axios
+        .delete(`/staffs/${item.id}`)
+        .then((res) => {
+          this.loadItems();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
 
     showUpdateForm(item) {
@@ -176,7 +180,6 @@ export default {
         id: item.id,
         name: item.name,
         phone_number: item.phone_number,
-       
       };
     },
 
@@ -185,12 +188,14 @@ export default {
         .put(`/staffs/${this.updateForm.id}`, {
           name: this.updateForm.name,
           phone_number: this.updateForm.phone_number,
-          
         })
 
         .then((res) => {
           this.editDialog = false;
           this.loadItems();
+        })
+        .catch((err) => {
+          console.error(err);
         });
     },
 
@@ -199,12 +204,14 @@ export default {
         .post(`/staffs`, {
           name: this.createForm.name,
           phone_number: this.createForm.phone_number,
-         
         })
 
         .then((res) => {
           this.createDialog = false;
           this.loadItems();
+        })
+        .catch((err) => {
+          console.error(err);
         });
     },
   },

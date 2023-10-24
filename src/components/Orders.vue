@@ -38,11 +38,23 @@
         </template>
 
         <template v-slot:[`item.actions`]="{ item }">
-          <v-icon v-if="item.status === 'unconfirmed'" small color="green" class="mr-2" @click="updateItem(item)">
+          <v-icon
+            v-if="item.status === 'unconfirmed'"
+            small
+            color="green"
+            class="mr-2"
+            @click="updateItem(item)"
+          >
             mdi-check-circle
           </v-icon>
 
-          <v-icon v-if="item.status === 'confirmed'" small color="red" class="mr-2" @click="updateItem(item)">
+          <v-icon
+            v-if="item.status === 'confirmed'"
+            small
+            color="red"
+            class="mr-2"
+            @click="updateItem(item)"
+          >
             mdi-close-box
           </v-icon>
 
@@ -104,14 +116,22 @@ export default {
           .then((res) => {
             this.items = res.data.items;
             this.pageCount = res.data.page_count;
+          })
+          .catch((err) => {
+            console.error(err);
           });
       }, 1000);
     },
 
     deleteItem(item) {
-      this.$axios.delete(`/orders/${item.id}`).then((res) => {
-        this.loadItems();
-      });
+      this.$axios
+        .delete(`/orders/${item.id}`)
+        .then((res) => {
+          this.loadItems();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
 
     showUpdateForm(item) {
@@ -135,7 +155,7 @@ export default {
           room_id: item.room_id,
           combo: item.combo,
           room_type_id: item.room_type_id,
-          status: item.status === "unconfirmed" ? "confirmed" : "unconfirmed"
+          status: item.status === "unconfirmed" ? "confirmed" : "unconfirmed",
         })
 
         .then((res) => {
@@ -143,12 +163,15 @@ export default {
         });
     },
 
-   
-
     async getRoomTypesList() {
-      await this.$axios.get("/room_types/all").then((res) => {
-        this.roomTypesList = res.data;
-      });
+      await this.$axios
+        .get("/room_types/all")
+        .then((res) => {
+          this.roomTypesList = res.data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
 
     renderRoomType(id) {

@@ -210,7 +210,10 @@ export default {
           .get(`/posts?page=1&limit=${this.itemsPerPage}`)
           .then((res) => {
             this.items = res.data.items;
-          });
+          })
+          .catch(err => {
+            console.error(err);
+          })
       }, 1000);
     },
 
@@ -269,7 +272,11 @@ export default {
           };
 
           this.loadItems();
-        });
+        })
+
+        .catch(err => {
+          console.error(err);
+        })
     },
   },
 

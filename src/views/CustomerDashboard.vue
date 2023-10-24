@@ -54,7 +54,7 @@ export default {
     isAdmin: false,
     isLogged: false,
     drawer: null,
-    items: [["mdi-post", "My Posts", "my-posts-customer"]],
+    items: [["mdi-post-outline", "My Posts", "my-posts-customer"]],
   }),
 
   methods: {

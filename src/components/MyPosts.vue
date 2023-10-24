@@ -330,14 +330,20 @@ export default {
           .then((res) => {
             this.items = res.data.items;
             this.pageCount = res.data.page_count;
-          });
+          })
+          .catch(err => {
+          console.error(err);
+        })
       }, 1000);
     },
 
     deleteItem(item) {
       this.$axios.delete(`/posts/${item.id}`).then((res) => {
         this.loadItems();
-      });
+      })
+      .catch(err => {
+          console.error(err);
+        })
     },
 
     showUpdateForm(item) {
@@ -369,7 +375,10 @@ export default {
         .then((res) => {
           this.editDialog = false;
           this.loadItems();
-        });
+        })
+        .catch(err => {
+          console.error(err);
+        })
     },
 
     createItem() {
@@ -395,7 +404,10 @@ export default {
           };
 
           this.loadItems();
-        });
+        })
+        .catch(err => {
+          console.error(err);
+        })
     },
 
     addContentToEnd(paragraph, image, formType) {

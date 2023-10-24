@@ -165,9 +165,6 @@ router.beforeEach((to, from, next) => {
       next('/error-page');
     }
   } else 
-  // {
-  //   next();
-  // }
   if (to.meta.public) {
     next();
   } else {

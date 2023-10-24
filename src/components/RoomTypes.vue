@@ -210,6 +210,9 @@ export default {
           .then((res) => {
             this.items = res.data.items;
             this.pageCount = res.data.page_count;
+          })
+          .catch((err) => {
+            console.error(err);
           });
       }, 1000);
     },
@@ -219,9 +222,14 @@ export default {
     },
 
     deleteItem(item) {
-      this.$axios.delete(`/room_types/${item.id}`).then((res) => {
-        this.loadItems();
-      });
+      this.$axios
+        .delete(`/room_types/${item.id}`)
+        .then((res) => {
+          this.loadItems();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
 
     showUpdateForm(item) {
@@ -247,6 +255,9 @@ export default {
         .then((res) => {
           this.editDialog = false;
           this.loadItems();
+        })
+        .catch((err) => {
+          console.error(err);
         });
     },
 
@@ -262,6 +273,9 @@ export default {
         .then((res) => {
           this.createDialog = false;
           this.loadItems();
+        })
+        .catch((err) => {
+          console.error(err);
         });
     },
   },

@@ -47,17 +47,16 @@
                 <v-text-field
                   v-model="createForm.password"
                   label="Password"
-                  
                 ></v-text-field>
               </v-col>
 
               <v-col cols="12">
                 <v-select
-                v-model="createForm.type"
-                :items="['admin', 'customer']"
-                label="Type"
-                single-line
-              ></v-select>
+                  v-model="createForm.type"
+                  :items="['admin', 'customer']"
+                  label="Type"
+                  single-line
+                ></v-select>
               </v-col>
             </v-row>
           </v-card-actions>
@@ -82,7 +81,6 @@
         class="elevation-1"
         :loading="loading"
       >
-        
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="showUpdateForm(item)">
             mdi-pencil
@@ -110,42 +108,41 @@
         <v-card-actions>
           <v-row>
             <v-col cols="12">
-                <v-text-field
-                  v-model="updateForm.name"
-                  label="Name"
-                ></v-text-field>
-              </v-col>
+              <v-text-field
+                v-model="updateForm.name"
+                label="Name"
+              ></v-text-field>
+            </v-col>
 
-              <v-col cols="12">
-                <v-text-field
-                  v-model="updateForm.phone_number"
-                  label="Phone Number"
-                ></v-text-field>
-              </v-col>
+            <v-col cols="12">
+              <v-text-field
+                v-model="updateForm.phone_number"
+                label="Phone Number"
+              ></v-text-field>
+            </v-col>
 
-              <v-col cols="12">
-                <v-text-field
-                  v-model="updateForm.email"
-                  label="Email"
-                ></v-text-field>
-              </v-col>
+            <v-col cols="12">
+              <v-text-field
+                v-model="updateForm.email"
+                label="Email"
+              ></v-text-field>
+            </v-col>
 
-              <v-col cols="12">
-                <v-text-field
-                  v-model="updateForm.password"
-                  label="Password"
-                  
-                ></v-text-field>
-              </v-col>
+            <v-col cols="12">
+              <v-text-field
+                v-model="updateForm.password"
+                label="Password"
+              ></v-text-field>
+            </v-col>
 
-              <v-col cols="12">
-                <v-select
+            <v-col cols="12">
+              <v-select
                 v-model="updateForm.type"
                 :items="['admin', 'customer']"
                 label="Type"
                 single-line
               ></v-select>
-              </v-col>
+            </v-col>
           </v-row>
         </v-card-actions>
 
@@ -213,6 +210,9 @@ export default {
           .then((res) => {
             this.items = res.data.items;
             this.pageCount = res.data.page_count;
+          })
+          .catch((err) => {
+            console.error(err);
           });
       }, 1000);
     },
@@ -222,9 +222,14 @@ export default {
     },
 
     deleteItem(item) {
-      this.$axios.delete(`/users/${item.id}`).then((res) => {
-        this.loadItems();
-      });
+      this.$axios
+        .delete(`/users/${item.id}`)
+        .then((res) => {
+          this.loadItems();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
 
     showUpdateForm(item) {
@@ -252,6 +257,9 @@ export default {
         .then((res) => {
           this.editDialog = false;
           this.loadItems();
+        })
+        .catch((err) => {
+          console.error(err);
         });
     },
 
@@ -268,6 +276,9 @@ export default {
         .then((res) => {
           this.createDialog = false;
           this.loadItems();
+        })
+        .catch((err) => {
+          console.error(err);
         });
     },
   },

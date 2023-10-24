@@ -18,7 +18,9 @@
         </v-col>
 
         <v-col class="mt-3" v-if="isLogged && !isAdmin">
-          <v-btn @click="goToMyPosts" text class="white--text mb-2">My Posts</v-btn>
+          <v-btn @click="goToMyPosts" text class="white--text mb-2"
+            >My Posts</v-btn
+          >
         </v-col>
 
         <v-col md="2" offset-md="5" class="mt-3" v-if="isLogged && !isAdmin">
@@ -77,9 +79,8 @@
                 <div class="ml-6" style="opacity: 50%">Da Nang, Viet Nam</div>
               </div>
 
-              <div class="mt-6" style="font-size: 36px; font-weight: bold">
-                Meliã Danang <br />
-                Karaoke
+              <div class="mt-6" style="font-size: 40px; font-weight: bold">
+                Meliã Danang
               </div>
 
               <div class="mt-6" style="font-size: 16px; opacity: 50%">
@@ -91,14 +92,14 @@
               </div>
 
               <div class="mt-6">
-                <v-btn
-                  @click="openFacebookFanpage"
-                  tile
-                  color="#252525"
-                  class="white--text rounded-lg"
+               
+                <v-icon @click="openFacebookFanpage" x-large class="mr-3 icon-hover"
+                  >mdi-facebook</v-icon
                 >
-                  Facebook Fanpage
-                </v-btn>
+
+                <v-icon @click="openFacebookFanpage" x-large class="ml-3 icon-hover"
+                  >mdi-instagram</v-icon
+                >
               </div>
             </div>
           </v-col>
@@ -111,15 +112,20 @@
 
       <v-container fluid class="white--text" style="background-color: #252525">
         <div class="mt-6 mb-6" style="font-size: 25px; margin-left: 125px">
-          Find your perfect karaoke room
+          Find your perfect room
         </div>
 
         <div style="margin-left: 125px; margin-right: 125px" class="mb-6">
-          <v-carousel :show-arrows="false">
+          <v-carousel cycle hide-delimiter-background show-arrows-on-hover>
             <v-carousel-item contain v-for="(item, i) in slideItems" :key="i">
               <v-row class="fill-height">
                 <v-col cols="4">
-                  <v-card color="#D9D9D9">
+                  <v-card
+                    color="#D9D9D9"
+                    v-scroll.self="onScroll"
+                    class="overflow-y-auto"
+                    max-height="500"
+                  >
                     <v-card-title>{{ item.name }}</v-card-title>
                     <v-card-subtitle>{{
                       formattedPrice(item.price) + " VNĐ/hour"
@@ -349,7 +355,6 @@ export default {
     logOut() {
       localStorage.clear();
       window.location.reload();
-
     },
 
     openFacebookFanpage() {
@@ -367,9 +372,14 @@ export default {
     },
 
     getRoomTypesList() {
-      this.$axios.get("/room_types/all").then((res) => {
-        this.slideItems = res.data;
-      });
+      this.$axios
+        .get("/room_types/all")
+        .then((res) => {
+          this.slideItems = res.data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
 
     showBookingForm(item) {
@@ -450,5 +460,13 @@ export default {
 <style lang="scss" scoped>
 .remove-padding {
   padding: 0 !important;
+}
+
+.icon-hover {
+  color: #252525;
+
+  &:hover {
+    opacity: 0.5;
+  }
 }
 </style>
