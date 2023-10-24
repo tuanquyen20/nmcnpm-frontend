@@ -24,6 +24,13 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
+                  v-model="createForm.avatar"
+                  label="Avatar link"
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12">
+                <v-text-field
                   v-model="createForm.name"
                   label="Name"
                 ></v-text-field>
@@ -107,6 +114,13 @@
 
         <v-card-actions>
           <v-row>
+            <v-col cols="12">
+              <v-text-field
+                v-model="updateForm.avatar"
+                label="Avatar Link"
+              ></v-text-field>
+            </v-col>
+
             <v-col cols="12">
               <v-text-field
                 v-model="updateForm.name"
@@ -241,6 +255,7 @@ export default {
         password: item.password,
         phone_number: item.phone_number,
         type: item.type,
+        avatar: item.avatar
       };
     },
 
@@ -252,6 +267,7 @@ export default {
           email: this.updateForm.email,
           password: this.updateForm.password,
           type: this.updateForm.type,
+          avatar: this.updateForm.avatar
         })
 
         .then((res) => {
@@ -271,6 +287,7 @@ export default {
           email: this.createForm.email,
           password: this.createForm.password,
           type: this.createForm.type,
+          avatar: this.createForm.avatar,
         })
 
         .then((res) => {
