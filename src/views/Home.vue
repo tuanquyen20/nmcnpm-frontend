@@ -141,6 +141,7 @@
                         height="50px"
                         width="100%"
                         @click="showBookingForm(item)"
+                        v-if="!isAdmin"
                       >
                         Book now
                       </v-btn>
@@ -298,7 +299,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn v-if="!isAdmin" color="#252525" class="white--text" @click="orderRoom">
+          <v-btn color="#252525" class="white--text" @click="orderRoom">
             Book now
           </v-btn>
         </v-card-actions>
