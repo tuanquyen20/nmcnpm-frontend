@@ -298,13 +298,13 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="#252525" class="white--text" @click="orderRoom">
+          <v-btn v-if="!isAdmin" color="#252525" class="white--text" @click="orderRoom">
             Book now
           </v-btn>
         </v-card-actions>
 
         <v-card-text class="green--text" v-if="bookingSuccess"
-          >You have successfully placed your order! A Meliã representative will
+          >You have successfully placed your order! We have sent you an email about your order and A Meliã representative will
           contact you as soon as possible.</v-card-text
         >
         <v-card-text class="red--text" v-if="bookingFail"
