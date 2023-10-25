@@ -223,6 +223,12 @@ export default {
 
         .then((res) => {
           this.createDialog = false;
+          this.createForm = {
+            select: {
+              id: "",
+              name: "",
+            },
+          };
           this.loadItems();
         })
         .catch((err) => {

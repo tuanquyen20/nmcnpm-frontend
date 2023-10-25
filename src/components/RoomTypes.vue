@@ -68,7 +68,11 @@
         </v-card>
       </v-dialog>
 
-      <v-text-field v-model="search" label="Search" append-icon="mdi-magnify"></v-text-field>
+      <v-text-field
+        v-model="search"
+        label="Search"
+        append-icon="mdi-magnify"
+      ></v-text-field>
 
       <v-data-table
         :headers="headers"
@@ -265,7 +269,7 @@ export default {
 
         .then((res) => {
           this.editDialog = false;
-          this.loadItems();
+          this.createForm = this.loadItems();
         })
         .catch((err) => {
           console.error(err);
@@ -283,6 +287,12 @@ export default {
 
         .then((res) => {
           this.createDialog = false;
+          this.createForm = {
+            name: "",
+            price: 0,
+            description: "",
+            background_link: "",
+          };
           this.loadItems();
         })
         .catch((err) => {

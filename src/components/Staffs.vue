@@ -49,8 +49,11 @@
         </v-card>
       </v-dialog>
 
-      <v-text-field v-model="search" label="Search" append-icon="mdi-magnify"></v-text-field>
-
+      <v-text-field
+        v-model="search"
+        label="Search"
+        append-icon="mdi-magnify"
+      ></v-text-field>
 
       <v-data-table
         :headers="headers"
@@ -152,8 +155,8 @@ export default {
 
   watch: {
     search(newValue) {
-      this.loadItems()
-    }
+      this.loadItems();
+    },
   },
 
   methods: {
@@ -162,7 +165,9 @@ export default {
       setTimeout(() => {
         this.loading = false;
         this.$axios
-          .get(`/staffs?page=${this.page}&limit=${this.itemsPerPage}&search=${this.search}`)
+          .get(
+            `/staffs?page=${this.page}&limit=${this.itemsPerPage}&search=${this.search}`
+          )
           .then((res) => {
             this.items = res.data.items || [];
             this.pageCount = res.data.page_count;
@@ -218,6 +223,10 @@ export default {
 
         .then((res) => {
           this.createDialog = false;
+          this.createForm = {
+            name: "",
+            phone_number: "",
+          };
           this.loadItems();
         })
         .catch((err) => {
