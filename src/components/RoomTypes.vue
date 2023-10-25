@@ -68,6 +68,8 @@
         </v-card>
       </v-dialog>
 
+      <v-text-field v-model="search" label="Search" append-icon="mdi-magnify"></v-text-field>
+
       <v-data-table
         :headers="headers"
         :items="items"
@@ -169,6 +171,7 @@ import numeral from "numeral";
 export default {
   data() {
     return {
+      search: "",
       editDialog: false,
       createDialog: false,
       loading: false,
@@ -200,15 +203,23 @@ export default {
     };
   },
 
+  watch: {
+    search(newValue) {
+      this.loadItems();
+    },
+  },
+
   methods: {
     loadItems() {
       this.loading = true;
       setTimeout(() => {
         this.loading = false;
         this.$axios
-          .get(`/room_types?page=${this.page}&limit=${this.itemsPerPage}`)
+          .get(
+            `/room_types?page=${this.page}&limit=${this.itemsPerPage}&search=${this.search}`
+          )
           .then((res) => {
-            this.items = res.data.items;
+            this.items = res.data.items || [];
             this.pageCount = res.data.page_count;
           })
           .catch((err) => {

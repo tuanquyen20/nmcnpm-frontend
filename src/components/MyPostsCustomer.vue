@@ -126,6 +126,8 @@
         </v-card>
       </v-dialog>
 
+
+      <v-text-field v-model="search" label="Search" append-icon="mdi-magnify"></v-text-field>
       <v-data-table
         :headers="headers"
         :items="items"
@@ -275,6 +277,7 @@
 export default {
   data() {
     return {
+      search: "",
       userInfor: {},
       isLogged: false,
       isAdmin: false,
@@ -318,6 +321,12 @@ export default {
     };
   },
 
+  watch: {
+    search(newValue) {
+      this.loadItems();
+    },
+  },
+
   methods: {
     loadItems() {
       this.loading = true;
@@ -325,10 +334,10 @@ export default {
         this.loading = false;
         this.$axios
           .get(
-            `/posts/user_id=${this.userInfor.id}?page=${this.page}&limit=${this.itemsPerPage}`
+            `/posts/user_id=${this.userInfor.id}?page=${this.page}&limit=${this.itemsPerPage}&search=${this.search}`
           )
           .then((res) => {
-            this.items = res.data.items;
+            this.items = res.data.items || [];
             this.pageCount = res.data.page_count;
           })
           .catch((err) => {

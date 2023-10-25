@@ -1,6 +1,9 @@
 <template>
   <v-container fluid>
-    <div class="mt-6 mb-6 d-flex justify-space-between" style="font-size: 25px; margin-left: 125px">
+    <div
+      class="mt-6 mb-6 d-flex justify-space-between"
+      style="font-size: 25px; margin-left: 125px"
+    >
       See our post
 
       <v-dialog v-model="createDialog" width="1000">
@@ -11,7 +14,7 @@
             v-on="on"
             small
             color="#252525"
-            style="right: 125px;"
+            style="right: 125px"
             v-if="isLogged && !isAdmin"
           >
             <v-icon dark> mdi-plus </v-icon>
@@ -38,8 +41,6 @@
                   label="Avatar Link"
                 ></v-text-field>
               </v-col>
-
-             
 
               <v-col
                 cols="12"
@@ -132,13 +133,18 @@
       </v-dialog>
     </div>
 
+    <v-text-field v-model="search" label="Search" style="margin-left: 125px; margin-right: 125px; width: 200px" class="mb-6" append-icon="mdi-magnify"></v-text-field>
 
-
-    <div style="margin-left: 125px; margin-right: 125px" class="mb-6">
+    <div style="margin-left: 125px; margin-right: 125px;" class="mb-6">
       <v-row>
         <v-col cols="3" class="post" v-for="(item, i) in items" :key="i">
           <div class="post-avatar" @click="viewPost(item.id)">
-            <v-img width="100%" height="200" class="rounded-lg" :src="item.avatar"></v-img>
+            <v-img
+              width="100%"
+              height="200"
+              class="rounded-lg"
+              :src="item.avatar"
+            ></v-img>
           </div>
           <div class="post-title" @click="viewPost(item.id)">
             <strong>
@@ -175,7 +181,7 @@
 
 <script>
 export default {
-   props: {
+  props: {
     userInfor: Object,
     isLogged: Boolean,
     isAdmin: Boolean,
@@ -183,6 +189,7 @@ export default {
 
   data() {
     return {
+      search: "",
       itemsPerPage: 4,
       items: [],
       loading: false,
@@ -201,25 +208,30 @@ export default {
     };
   },
 
+  watch: {
+    search(newValue) {
+      this.loadItems();
+    },
+  },
+
   methods: {
     loadItems() {
       this.loading = true;
       setTimeout(() => {
         this.loading = false;
         this.$axios
-          .get(`/posts?page=1&limit=${this.itemsPerPage}`)
+          .get(`/posts?page=1&limit=${this.itemsPerPage}&search=${this.search}`)
           .then((res) => {
-            this.items = res.data.items;
+            this.items = res.data.items || [];
           })
-          .catch(err => {
+          .catch((err) => {
             console.error(err);
-          })
+          });
       }, 1000);
     },
 
     viewPost(id) {
-      this.$router.push({ name: 'post-page', params: { id: id } });
-
+      this.$router.push({ name: "post-page", params: { id: id } });
     },
 
     morePost() {
@@ -255,7 +267,7 @@ export default {
           title: this.createForm.title,
           avatar: this.createForm.avatar,
           content: this.createForm.content,
-          user_id: this.userInfor.id
+          user_id: this.userInfor.id,
         })
 
         .then((res) => {
@@ -274,9 +286,9 @@ export default {
           this.loadItems();
         })
 
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
-        })
+        });
     },
   },
 

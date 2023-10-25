@@ -1,6 +1,7 @@
 <template>
   <v-container fluid>
     <div>
+      <v-text-field v-model="search" label="Search" append-icon="mdi-magnify"></v-text-field>
       <v-data-table
         :headers="headers"
         :items="items"
@@ -77,6 +78,7 @@
 export default {
   data() {
     return {
+      search: "",
       roomTypesList: [],
       loading: false,
       page: 1,
@@ -93,7 +95,6 @@ export default {
         { text: "Combo", value: "combo" },
         { text: "Status", value: "status" },
         { text: "Room Type", value: "room_type" },
-
         { text: "Actions", value: "actions", sortable: false },
       ],
 
@@ -107,15 +108,21 @@ export default {
     };
   },
 
+  watch: {
+    search(newValue) {
+      this.loadItems()
+    }
+  },
+
   methods: {
     loadItems() {
       this.loading = true;
       setTimeout(() => {
         this.loading = false;
         this.$axios
-          .get(`/orders?page=${this.page}&limit=${this.itemsPerPage}`)
+          .get(`/orders?page=${this.page}&limit=${this.itemsPerPage}&search=${this.search}`)
           .then((res) => {
-            this.items = res.data.items;
+            this.items = res.data.items || [];
             this.pageCount = res.data.page_count;
           })
           .catch((err) => {

@@ -36,8 +36,6 @@
                 ></v-text-field>
               </v-col>
 
-             
-
               <v-col
                 cols="12"
                 v-for="(item, index) in createForm.content"
@@ -127,6 +125,8 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+      <v-text-field v-model="search" label="Search" append-icon="mdi-magnify"></v-text-field>
 
       <v-data-table
         :headers="headers"
@@ -277,6 +277,7 @@
 export default {
   data() {
     return {
+      search: "",
       userInfor: {},
       isLogged: false,
       isAdmin: false,
@@ -320,30 +321,40 @@ export default {
     };
   },
 
+  watch: {
+    search(newValue) {
+      this.loadItems();
+    },
+  },
+
   methods: {
     loadItems() {
       this.loading = true;
       setTimeout(() => {
         this.loading = false;
         this.$axios
-          .get(`/posts/user_id=${this.userInfor.id}?page=${this.page}&limit=${this.itemsPerPage}`)
+          .get(
+            `/posts/user_id=${this.userInfor.id}?page=${this.page}&limit=${this.itemsPerPage}&search=${this.search}`
+          )
           .then((res) => {
-            this.items = res.data.items;
+            this.items = res.data.items || [];
             this.pageCount = res.data.page_count;
           })
-          .catch(err => {
-          console.error(err);
-        })
+          .catch((err) => {
+            console.error(err);
+          });
       }, 1000);
     },
 
     deleteItem(item) {
-      this.$axios.delete(`/posts/${item.id}`).then((res) => {
-        this.loadItems();
-      })
-      .catch(err => {
-          console.error(err);
+      this.$axios
+        .delete(`/posts/${item.id}`)
+        .then((res) => {
+          this.loadItems();
         })
+        .catch((err) => {
+          console.error(err);
+        });
     },
 
     showUpdateForm(item) {
@@ -369,16 +380,16 @@ export default {
           avatar: this.updateForm.avatar,
           content: this.updateForm.content,
           created_at: this.updateForm.created_at,
-          user_id: this.updateForm.user_id
+          user_id: this.updateForm.user_id,
         })
 
         .then((res) => {
           this.editDialog = false;
           this.loadItems();
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
-        })
+        });
     },
 
     createItem() {
@@ -387,7 +398,7 @@ export default {
           title: this.createForm.title,
           avatar: this.createForm.avatar,
           content: this.createForm.content,
-          user_id: this.userInfor.id
+          user_id: this.userInfor.id,
         })
 
         .then((res) => {
@@ -405,9 +416,9 @@ export default {
 
           this.loadItems();
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
-        })
+        });
     },
 
     addContentToEnd(paragraph, image, formType) {
