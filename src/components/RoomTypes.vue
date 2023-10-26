@@ -193,14 +193,14 @@ export default {
       updateForm: {
         id: null,
         name: "",
-        price: 0,
+        price: "0",
         description: "",
         background_link: "",
       },
 
       createForm: {
         name: "",
-        price: 0,
+        price: "0",
         description: "",
         background_link: "",
       },
@@ -256,6 +256,8 @@ export default {
         description: item.description,
         background_link: item.background_link,
       };
+
+console.log(this.updateForm);
     },
 
     updateItem() {
@@ -269,7 +271,7 @@ export default {
 
         .then((res) => {
           this.editDialog = false;
-          this.createForm = this.loadItems();
+          this.loadItems();
         })
         .catch((err) => {
           console.error(err);
@@ -289,7 +291,7 @@ export default {
           this.createDialog = false;
           this.createForm = {
             name: "",
-            price: 0,
+            price: "0",
             description: "",
             background_link: "",
           };
