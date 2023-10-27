@@ -106,7 +106,7 @@
                 >
 
                 <v-icon
-                  @click="openFacebookFanpage"
+                  @click="openInstaFanpage"
                   x-large
                   class="ml-3 icon-hover"
                   >mdi-instagram</v-icon
@@ -383,6 +383,12 @@ export default {
     openFacebookFanpage() {
       const urlToOpen =
         "https://www.facebook.com/profile.php?id=100012623027984";
+      window.open(urlToOpen, "_blank");
+    },
+
+    openInstaFanpage() {
+      const urlToOpen =
+        "https://www.instagram.com/_tao_meo_/";
       window.open(urlToOpen, "_blank");
     },
 
