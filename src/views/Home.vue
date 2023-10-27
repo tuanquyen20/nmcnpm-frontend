@@ -23,11 +23,17 @@
           >
         </v-col>
 
+        <v-col class="mt-3" v-if="isLogged && isAdmin">
+          <v-btn @click="goToMyOrders" text class="white--text mb-2"
+            >Orders</v-btn
+          >
+        </v-col>
+
         <v-col md="2" offset-md="5" class="mt-3" v-if="isLogged && !isAdmin">
           <v-btn @click="logOut" text class="white--text mb-2">Sign Out</v-btn>
         </v-col>
 
-        <v-col md="2" offset-md="8" class="mt-3" v-if="isLogged && isAdmin">
+        <v-col md="2" offset-md="5" class="mt-3" v-if="isLogged && isAdmin">
           <v-btn @click="logOut" text class="white--text mb-2">Sign Out</v-btn>
         </v-col>
       </v-row>
@@ -92,12 +98,17 @@
               </div>
 
               <div class="mt-6">
-               
-                <v-icon @click="openFacebookFanpage" x-large class="mr-3 icon-hover"
+                <v-icon
+                  @click="openFacebookFanpage"
+                  x-large
+                  class="mr-3 icon-hover"
                   >mdi-facebook</v-icon
                 >
 
-                <v-icon @click="openFacebookFanpage" x-large class="ml-3 icon-hover"
+                <v-icon
+                  @click="openFacebookFanpage"
+                  x-large
+                  class="ml-3 icon-hover"
                   >mdi-instagram</v-icon
                 >
               </div>
@@ -200,7 +211,7 @@
                 label="Phone number"
               ></v-text-field>
             </v-col>
-             <v-col cols="6">
+            <v-col cols="6">
               <v-text-field
                 v-model="bookingForm.email"
                 label="Email"
@@ -305,8 +316,9 @@
         </v-card-actions>
 
         <v-card-text class="green--text" v-if="bookingSuccess"
-          >You have successfully placed your order! We have sent you an email about your order and A Meliã representative will
-          contact you as soon as possible.</v-card-text
+          >You have successfully placed your order! We have sent you an email
+          about your order and A Meliã representative will contact you as soon
+          as possible.</v-card-text
         >
         <v-card-text class="red--text" v-if="bookingFail"
           >The room was fully booked during that time</v-card-text
@@ -355,6 +367,10 @@ export default {
   computed: {},
 
   methods: {
+    goToMyOrders() {
+      this.$router.push({ name: "orders" });
+    },
+
     goToMyPosts() {
       this.$router.push({ name: "my-posts-customer" });
     },

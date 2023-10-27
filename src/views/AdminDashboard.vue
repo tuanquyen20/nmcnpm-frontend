@@ -29,9 +29,11 @@
       <v-toolbar-title class="white--text mb-3">
         <v-img
           :src="require('../assets/logo.svg')"
-          class="my-3"
+          class="my-3 logo-img"
           contain
           height="25"
+          @click="goToHome"
+
       /></v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -62,24 +64,26 @@ export default {
       ["mdi-post-outline", "Posts", "posts"],
       ["mdi-account-outline", "Users", "users"],
       ["mdi-note-text-outline", "My Posts", "my-posts"],
-
     ],
   }),
 
   methods: {
     async logout() {
       localStorage.clear();
-     await this.$router.push({ name: "home" });
+      await this.$router.push({ name: "home" });
       window.location.reload();
+    },
 
+    goToHome() {
+      this.$router.push({ name: "home" });
     },
   },
 
-  created(){
-     this.userInfor = this.$store.state.userInfor;
+  created() {
+    this.userInfor = this.$store.state.userInfor;
     this.isAdmin = this.$store.state.isAdmin;
     this.isLogged = this.$store.state.isLogged;
-  }
+  },
 };
 </script>
 
@@ -92,5 +96,10 @@ export default {
 
 .remove-padding {
   padding: 0 !important;
+}
+
+
+.logo-img {
+  cursor: pointer;
 }
 </style>
