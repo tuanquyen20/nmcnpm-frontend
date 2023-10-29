@@ -61,9 +61,9 @@ export default {
       ["mdi-home-sound-in-outline", "Rooms", "rooms"],
       ["mdi-format-list-bulleted-type", "Room Types", "room-types"],
       ["mdi-account-multiple-outline", "Staffs", "staffs"],
-      ["mdi-post-outline", "Posts", "posts"],
+      ["mdi-post-outline", "Blogs", "blogs"],
       ["mdi-account-outline", "Users", "users"],
-      ["mdi-note-text-outline", "My Posts", "my-posts"],
+      ["mdi-note-text-outline", "My Blogs", "my-blogs"],
     ],
   }),
 

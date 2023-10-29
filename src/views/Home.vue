@@ -18,8 +18,8 @@
         </v-col>
 
         <v-col class="mt-3" v-if="isLogged && !isAdmin">
-          <v-btn @click="goToMyPosts" text class="white--text mb-2"
-            >My Posts</v-btn
+          <v-btn @click="goToMyBlogs" text class="white--text mb-2"
+            >My Blogs</v-btn
           >
         </v-col>
 
@@ -169,11 +169,11 @@
       </v-container>
 
       <v-container fluid class="remove-padding">
-        <HomePosts
+        <HomeBlogs
           :isAdmin="isAdmin"
           :isLogged="isLogged"
           :userInfor="userInfor"
-        ></HomePosts>
+        ></HomeBlogs>
         <v-img src="@/assets/picture.jpg" class="fill-height"></v-img>
       </v-container>
     </v-main>
@@ -331,10 +331,14 @@
 <script>
 import numeral from "numeral";
 import HomePosts from "../components/HomePosts.vue";
+
+import HomeBlogs from "../components/HomeBlogs.vue";
+
 import { format } from "date-fns";
 
 export default {
-  components: { HomePosts },
+  components: { HomePosts, HomeBlogs },
+
   data: () => ({
     userInfor: {},
     isAdmin: false,
@@ -371,8 +375,8 @@ export default {
       this.$router.push({ name: "orders" });
     },
 
-    goToMyPosts() {
-      this.$router.push({ name: "my-posts-customer" });
+    goToMyBlogs() {
+      this.$router.push({ name: "my-blogs-customer" });
     },
 
     logOut() {
@@ -387,8 +391,7 @@ export default {
     },
 
     openInstaFanpage() {
-      const urlToOpen =
-        "https://www.instagram.com/_tao_meo_/";
+      const urlToOpen = "https://www.instagram.com/_tao_meo_/";
       window.open(urlToOpen, "_blank");
     },
 

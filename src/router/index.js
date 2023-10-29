@@ -81,6 +81,16 @@ const routes = [
       },
 
       {
+        path: '/blogs',
+        name: 'blogs',
+        meta: {
+          requiresAdmin: true,
+
+        },
+        component: () => import(/* webpackChunkName: "about" */ '../components/Blogs.vue')
+      },
+
+      {
         path: '/users',
         name: 'users',
         meta: {
@@ -99,6 +109,16 @@ const routes = [
         },
         component: () => import(/* webpackChunkName: "about" */ '../components/MyPosts.vue')
       },
+
+      {
+        path: '/my-blogs',
+        name: 'my-blogs',
+        meta: {
+          requiresAdmin: true,
+
+        },
+        component: () => import(/* webpackChunkName: "about" */ '../components/MyBlogs.vue')
+      },
     ]
   },
   {
@@ -109,6 +129,16 @@ const routes = [
 
     },
     component: () => import(/* webpackChunkName: "about" */ '../views/PostPage.vue')
+  },
+
+  {
+    path: '/blogs/:id',
+    name: 'blog-page',
+    meta: {
+      public: true,
+
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/BlogPage.vue')
   },
 
   {
@@ -127,6 +157,15 @@ const routes = [
         },
         component: () => import(/* webpackChunkName: "about" */ '../components/MyPostsCustomer.vue')
       },
+
+      {
+        path: '/my-blogs-customer',
+        name: 'my-blogs-customer',
+        meta: {
+          requiresCustomer: true,
+        },
+        component: () => import(/* webpackChunkName: "about" */ '../components/MyBlogsCustomer.vue')
+      },
     ]
   },
   {
@@ -137,7 +176,7 @@ const routes = [
 
     },
     component: () => import(/* webpackChunkName: "about" */ '../views/ErrorPage.vue')
-  }
+  },
 ]
 
 const router = new VueRouter({
